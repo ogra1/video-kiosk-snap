@@ -11,6 +11,7 @@ apps:
   player:
     command: xwayland-kiosk-launch mplayer -vo gl -ao pulse -fs -loop 0
     environment:
+      XWAYLAND_FULLSCREEN_WINDOW_HINT: title="video-kiosk.player"
       FONTCONFIG_PATH: $SNAP/etc/fonts/conf.d
       FONTCONFIG_FILE: $SNAP/etc/fonts/fonts.conf
       LIBGL_DRIVERS_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
