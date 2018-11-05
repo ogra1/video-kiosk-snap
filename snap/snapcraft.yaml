@@ -27,7 +27,7 @@ apps:
 
 plugs:
   x11-plug:
-    interface: x1
+    interface: x11
 
 parts:
   mplayer:
