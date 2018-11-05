@@ -1,0 +1,41 @@
+name: video-kiosk
+version: '0.1'
+summary: A simple videoplayer kiosk snap using XWayland
+description: |
+  This is my-snap's description. You have a paragraph or two to tell the
+  most important story about your snap. Keep it under 100 words though,
+  we live in tweetspace and your description wants to look good in the snap
+  store.
+
+grade: stable
+confinement: strict
+
+apps:
+  player:
+    command: mplayer -vo gl -ao pulse -fs -loop 0
+    environment:
+      FONTCONFIG_PATH: $SNAP/etc/fonts/conf.d
+      FONTCONFIG_FILE: $SNAP/etc/fonts/fonts.conf
+      LIBGL_DRIVERS_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
+      LD_LIBRARY_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/samba:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa:$LIBGL_DRIVERS_PATH:/var/lib/snapd/lib/gl:$LD_LIBRARY_PATH
+    plugs:
+      - network
+      - network-bind
+      - opengl
+      - pulseaudio
+      - x11
+
+parts:
+  mplayer:
+    plugin: nil
+    override-prime: |
+      snapcraftctl prime
+      sed -i 's/\/usr\/share/\/snap\/video-kiosk\/current\/usr\/share/' etc/fonts/fonts.conf
+    stage-packages:
+      - fontconfig
+      - fonts-dejavu-core
+      - libgl1-mesa-dri
+      - libglu1-mesa
+      - libgpm2
+      - libpulse0
+      - mplayer
