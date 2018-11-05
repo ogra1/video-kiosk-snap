@@ -2,10 +2,7 @@ name: video-kiosk
 version: '0.1'
 summary: A simple videoplayer kiosk snap using XWayland
 description: |
-  This is my-snap's description. You have a paragraph or two to tell the
-  most important story about your snap. Keep it under 100 words though,
-  we live in tweetspace and your description wants to look good in the snap
-  store.
+  Remotely (and centrally) control a kiosk mode video player
 
 grade: stable
 confinement: strict
