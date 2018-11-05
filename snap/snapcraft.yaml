@@ -9,7 +9,7 @@ confinement: strict
 
 apps:
   player:
-    command: mplayer -vo gl -ao pulse -fs -loop 0
+    command: xwayland-kiosk-launch mplayer -vo gl -ao pulse -fs -loop 0
     environment:
       FONTCONFIG_PATH: $SNAP/etc/fonts/conf.d
       FONTCONFIG_FILE: $SNAP/etc/fonts/fonts.conf
@@ -20,11 +20,18 @@ apps:
       - network-bind
       - opengl
       - pulseaudio
-      - x11
+      - wayland
+      - x11-plug
+    slots: [ x11 ]
+
+plugs:
+  x11-plug:
+    interface: x1
 
 parts:
   mplayer:
     plugin: nil
+    after: [ xwayland-kiosk-helper ]
     override-prime: |
       snapcraftctl prime
       sed -i 's/\/usr\/share/\/snap\/video-kiosk\/current\/usr\/share/' etc/fonts/fonts.conf
