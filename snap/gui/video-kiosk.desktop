@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=VideoKiosk
+Comment=Centrally remote controller video player
+Icon=${SNAP}/meta/gui/icon.png
+Exec=video-kiosk.player
+Terminal=false
+Categories=Utility;
