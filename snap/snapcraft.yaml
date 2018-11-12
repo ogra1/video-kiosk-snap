@@ -7,9 +7,6 @@ description: |
 grade: stable
 confinement: strict
 
-grade: stable
-confinement: strict
-
 apps:
   player:
     command: xwayland-kiosk-launch launcher
