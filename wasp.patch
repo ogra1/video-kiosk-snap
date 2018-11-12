@@ -1,0 +1,59 @@
+diff --git a/src/wasp/handlers_template.go b/src/wasp/handlers_template.go
+index f0b3e4c..5d28ddc 100644
+--- a/src/wasp/handlers_template.go
++++ b/src/wasp/handlers_template.go
+@@ -39,7 +39,7 @@ func handlerConfig(w http.ResponseWriter, r *http.Request) {
+ 	}
+ 
+ 	cd := ConfigData{}
+-	cd.MediaDir = properties.GetString(PROPERTY_MEDIA_DIR, "/")
++	cd.MediaDir = properties.GetString(PROPERTY_MEDIA_DIR, "/var/snap/wasp/current/")
+ 	cd.BindAddress = properties.GetString(PROPERTY_BIND_ADDRESS, ":8080")
+ 	cd.MplayerFifo = properties.GetString(PROPERTY_MPLAYER_FIFO, "/tmp/mplayer.fifo")
+ 	cd.VideoExtensions = properties.GetString(PROPERTY_VIDEO_EXTS, "")
+diff --git a/src/wasp/properties.go b/src/wasp/properties.go
+index e95139d..dc7485c 100644
+--- a/src/wasp/properties.go
++++ b/src/wasp/properties.go
+@@ -5,9 +5,7 @@ package main
+ import (
+ 	"fmt"
+ 	"io/ioutil"
+-	"log"
+ 	"os"
+-	"os/user"
+ 	"path"
+ 	"strconv"
+ 	"strings"
+@@ -15,7 +13,7 @@ import (
+ 
+ const (
+ 	// The default configuration/properties file used to r/w from/to.
+-	PROPERTIES_FILE string = "/.wasp/wasp.properties"
++	PROPERTIES_FILE string = "/var/snap/wasp/current/.wasp/wasp.properties"
+ )
+ 
+ //================================================================================
+@@ -39,12 +37,7 @@ const (
+ // directory, and then concatenate it with the PROPERTIES_FILE value.
+ // The returned string is an absolute path to the file.
+ func (p *Properties) DefFileName() string {
+-	usr, uerr := user.Current()
+-	if uerr != nil {
+-		log.Fatalf("Unable to get the current user's directory: %s", uerr)
+-	}
+-
+-	return usr.HomeDir + PROPERTIES_FILE
++	return PROPERTIES_FILE
+ }
+ 
+ // Check whether the default properties file exists, by stat-ing it. The
+@@ -62,7 +55,7 @@ func (p *Properties) FileExists() bool {
+ // Sets default properties. Mainly used at first initialization of Wasp.
+ func (p *Properties) SetDefaults() {
+ 	q := *p
+-	q[PROPERTY_MEDIA_DIR] = "/"
++	q[PROPERTY_MEDIA_DIR] = "/var/snap/wasp/current/"
+ 	q[PROPERTY_BIND_ADDRESS] = ":8080"
+ 	q[PROPERTY_MPLAYER_FIFO] = "/tmp/mplayer.fifo"
+ 	q[PROPERTY_VIDEO_EXTS] = ".mp4;.avi;.mpg;.mpeg;.wmv;.flv;.swf"

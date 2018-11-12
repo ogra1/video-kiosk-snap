@@ -1,0 +1,23 @@
+#! /bin/sh
+
+set -ex
+
+[ -e "$SNAP_DATA/site" ] || cp -a $SNAP/site $SNAP_DATA/
+
+cd $SNAP_DATA
+
+wasp &
+
+sleep 1
+
+while true; do
+    mplayer -vo gl -ao pulse \
+        -noconfig all \
+        -noconsolecontrols \
+        -quiet \
+        -idle \
+        -slave \
+        -fs \
+        -cache 8192 \
+        -input file=/tmp/mplayer.fifo
+done

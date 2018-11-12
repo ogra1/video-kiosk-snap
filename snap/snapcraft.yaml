@@ -7,14 +7,18 @@ description: |
 grade: stable
 confinement: strict
 
+grade: stable
+confinement: strict
+
 apps:
   player:
-    command: xwayland-kiosk-launch mplayer -vo gl -ao pulse -fs -loop 0
+    command: xwayland-kiosk-launch launcher
+    daemon: simple
     environment:
       XWAYLAND_FULLSCREEN_WINDOW_HINT: title="video-kiosk.player"
       FONTCONFIG_PATH: $SNAP/etc/fonts/conf.d
       FONTCONFIG_FILE: $SNAP/etc/fonts/fonts.conf
-      LIBGL_DRIVERS_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
+      LIBGL_DRIVERS_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri:/var/lib/snapd/lib/gl
       LD_LIBRARY_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/samba:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa:$LIBGL_DRIVERS_PATH:/var/lib/snapd/lib/gl:$LD_LIBRARY_PATH
     plugs:
       - network
@@ -30,13 +34,23 @@ plugs:
     interface: x11
 
 parts:
-  mplayer:
-    plugin: nil
+  wasp:
+    plugin: go
+    source: https://github.com/krpors/wasp.git
     after: [ xwayland-kiosk-helper ]
+    override-pull: |
+      snapcraftctl pull
+      git apply --verbose ../../../wasp.patch
+    override-build: |
+      snapcraftctl build
+      cp -av site $SNAPCRAFT_PART_INSTALL/
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      cp -av ../../../launcher $SNAPCRAFT_PART_INSTALL/bin/
     override-prime: |
       snapcraftctl prime
       sed -i 's/\/usr\/share/\/snap\/video-kiosk\/current\/usr\/share/' etc/fonts/fonts.conf
       sed -i 's/$SNAP\/usr\/bin\/i3/#$SNAP\/usr\/bin\/i3/' bin/xwayland-kiosk-launch
+      sed -i 's/bin\/Xwayland/bin\/Xwayland -nocursor/' bin/xwayland-kiosk-launch
     stage-packages:
       - fontconfig
       - fonts-dejavu-core
